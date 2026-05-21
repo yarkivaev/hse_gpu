@@ -1,0 +1,13 @@
+job1:
+  except:
+    - master
+  script:
+    - date
+    - cd /
+    - /run.sh ${CI_PROJECT_DIR}
+  artifacts:
+    when: always
+    reports:
+      junit: build/report.xml
+  tags:
+    - cuda
