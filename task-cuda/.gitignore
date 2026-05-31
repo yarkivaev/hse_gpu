@@ -1,4 +1,5 @@
 **cmake-build-debug**
 *.ipynb
+!colab/*.ipynb
 *.o
 **build**
