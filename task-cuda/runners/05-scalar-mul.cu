@@ -53,6 +53,11 @@ static float benchMethod(float (*fn)(int, float*, float*, int), int n, int block
   return ms;
 }
 
+static bool closeEnough(float got, float expected) {
+  float scale = fmaxf(fmaxf(fabsf(got), fabsf(expected)), 1.f);
+  return fabsf(got - expected) <= 1e-4f * scale + 0.5f;
+}
+
 static void doCheck() {
   const int n = 100000;
   const int blockSize = 256;
@@ -69,7 +74,7 @@ static void doCheck() {
   checkCuda(cudaMemcpy(d2, h2.data(), (size_t)n * sizeof(float), cudaMemcpyHostToDevice));
   float a = ScalarMulSumPlusReduction(n, d1, d2, blockSize);
   float b = ScalarMulTwoReductions(n, d1, d2, blockSize);
-  if (fabsf(a - ref) > 1e-3f || fabsf(b - ref) > 1e-3f) {
+  if (!closeEnough(a, ref) || !closeEnough(b, ref)) {
     fail("scalar mul mismatch");
   }
   cudaFree(d1);

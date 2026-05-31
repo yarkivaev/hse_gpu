@@ -8,9 +8,12 @@ static float reducePartial(float* dPartial, int count, int blockSize, float* dOn
   while (count > 1) {
     int next = (count + blockSize - 1) / blockSize;
     if (next == 1) {
-      ScalarMulBlock<<<1, blockSize>>>(count, dPartial, dOnes, dPartial);
+      float* dOut = dTmp;
+      ScalarMulSecondBlockReduce<<<1, blockSize>>>(count, dPartial, dOut);
       cudaDeviceSynchronize();
-      break;
+      float out = 0.f;
+      cudaMemcpy(&out, dOut, sizeof(float), cudaMemcpyDeviceToHost);
+      return out;
     }
     ScalarMulBlock<<<next, blockSize>>>(count, dPartial, dOnes, dTmp);
     cudaDeviceSynchronize();
