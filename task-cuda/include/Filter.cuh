@@ -11,6 +11,15 @@ __global__ void Filter(
     OperationFilterType type,
     float* value,
     float* result,
-    float* auxArray1, // you can rename it
-    float* auxArray2
-);
+    float* auxArray1,
+    float* auxArray2);
+
+void FilterRun(
+    int numElements,
+    float* array,
+    OperationFilterType type,
+    float* value,
+    float* result,
+    float* auxArray1,
+    float* auxArray2,
+    int blockSize);

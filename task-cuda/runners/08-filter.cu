@@ -25,12 +25,7 @@ static void launchFilter(
     float* dResult,
     float* dAux1,
     float* dAux2) {
-  int grid = (n + blockSize - 1) / blockSize;
-  if (grid < 1) {
-    grid = 1;
-  }
-  size_t shared = (size_t)blockSize * sizeof(float);
-  Filter<<<grid, blockSize, shared>>>(n, dArray, type, dVal, dResult, dAux1, dAux2);
+  FilterRun(n, dArray, type, dVal, dResult, dAux1, dAux2, blockSize);
 }
 
 static std::vector<float> cpuFilter(const std::vector<float>& in, OperationFilterType type, float threshold) {
